@@ -8,10 +8,10 @@ const ExclusiveDeals = () => {
       <h1 className='my-5'>Exclusive Deal for you</h1>
 
       <div className="row exclusiveImages">
-        <div className="col-8 columns">
+        <div className="col-lg-8 col-md-8 col-sm-12 col-12 columns">
           <img src={Deals[0].image} alt="" />
         </div>
-        <div className="col-4 columns">
+        <div className="col-4 columns notInMobile">
           <div className="row rightDeals"><img src={Deals[1].image} alt="" /></div>
           <div className="row rightDeals"><img src={Deals[0].image} alt="" /></div>
         </div>
@@ -47,6 +47,20 @@ const ExclusiveComponent = styled.div`
 
     .rightDeals{
       height: 50%;
+    }
+
+    @media (max-width: 768px) {
+      h1{
+        font-size: 3vmax !important;
+      }
+
+      .exclusiveImages{
+        width: 95%;
+      }
+
+      .notInMobile{
+        display: none;
+      }
     }
 `;
 

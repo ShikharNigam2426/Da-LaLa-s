@@ -53,7 +53,7 @@ const CarauselContainer = styled.div`
   height: 65vh;
 
   #carouselExampleIndicators{
-    height: 65vh;
+    height: 100%;
   }
 
   .carousel-indicators {
@@ -61,7 +61,7 @@ const CarauselContainer = styled.div`
   }
 
   .carousel-inner {
-    height: 65vh;
+    height: 100%;
   }
 
   .carousel-item > img{
@@ -70,6 +70,7 @@ const CarauselContainer = styled.div`
 
   .carousel-item{
     position: relative;
+    height: 100%;
   }
 
   /* Custom styles for text visibility */
@@ -94,6 +95,9 @@ const CarauselContainer = styled.div`
   }
 
   @media (max-width: 768px){
+    position: relative;
+    top: 10vh;
+    height: 50vh;
       .topText{
         font-size: 4vw;
       }

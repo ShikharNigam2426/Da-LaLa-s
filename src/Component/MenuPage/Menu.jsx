@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import gsap from 'gsap';
 import '../fonts.css';
 import MenuArray from '../dataArrays/Menu';
 
@@ -14,7 +15,18 @@ const Menu = () => {
   // Filter menu items based on currentMenu category
   const filteredMenu = MenuArray.filter(item => item.category == currentMenu);
 
-  console.log('Filtered Menu:', filteredMenu);
+  // GSAP animation on cards
+  useEffect(() => {
+    gsap.fromTo('.menu-card', {
+      translateY: '-50px',  // Start position
+      opacity: 0,
+  }, {
+      translateY: '0px',   // End position
+      opacity: 1,
+      duration: 1,
+      stagger: 0.2,
+  });
+  }, [currentMenu]); // Re-run animation when currentMenu changes
 
   return (
     <MenuComponent className='ubuntu-bold'>
@@ -45,7 +57,7 @@ const Menu = () => {
       <MenuBoxes>
         {filteredMenu.length > 0 ? (
           filteredMenu.map((item, index) => (
-            <MenuBox key={index}>
+            <MenuBox key={index} className="menu-card">
               <CardContainer>
                 <CardImage src={item.image} alt={item.name} />
                 <CardContent>
@@ -72,6 +84,7 @@ const Menu = () => {
   );
 };
 
+// Styled Components
 const MenuBox = styled.div`
   width: 30%;
   max-width: 350px;
@@ -109,6 +122,10 @@ const CategoryButton = styled.div`
   transition: background-color 0.3s ease;
   &:hover {
     background-color: orange;
+  }
+
+  @media (max-width: 768px) {
+    padding: 8px;
   }
 `;
 
@@ -152,8 +169,6 @@ const CardContainer = styled.div`
     transform: translateY(-10px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   }
-
-  
 `;
 
 const CardImage = styled.img`

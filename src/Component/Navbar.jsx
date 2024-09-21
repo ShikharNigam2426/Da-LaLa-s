@@ -1,42 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import './fonts.css';
 import gsap from 'gsap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = (props) => {
     const [isMobileMenuVisible, setMobileMenuVisible] = useState(false);
+    const mobileMenuRef = useRef(null);
+    const scrollPosition = useRef(0);  // To save scroll position
+    const location = useLocation(); // Get current location (route)
 
     const toggleMobileMenu = () => {
         setMobileMenuVisible(!isMobileMenuVisible);
     };
 
     useEffect(() => {
+        // Example: Close the mobile menu when the route changes
+        setMobileMenuVisible(false);
+        window.scrollTo(0, 0);
+        
+        console.log("Route changed to:", location.pathname);
+    }, [location]);
+
+    useEffect(() => {
+        gsap.fromTo('.animate', {
+            translateY: '-50px',  // Start position
+            opacity: 0,
+        }, {
+            translateY: '0px',   // End position
+            opacity: 1,
+            duration: 1,
+            stagger: 0.3,
+        });
+    }, []);
+
+    useEffect(() => {
+
         const tl = gsap.timeline({ paused: true });
 
         if (isMobileMenuVisible) {
-            gsap.set('.mobileMenu', { display: 'flex', y: '-100%' }); // Set initial position
-            tl.to('.mobileMenu', {
+            scrollPosition.current = window.scrollY; // Save current scroll position
+            document.body.style.position = 'fixed';  // Freeze the scroll
+            document.body.style.top = `-${scrollPosition.current}px`;  // Prevent moving
+
+            gsap.set(mobileMenuRef.current, { visibility: 'visible', y: '0%' });
+            tl.to(mobileMenuRef.current, {
                 y: '0%',
                 duration: 0.6,
                 ease: 'power2.out',
-            })
-            .from('.mobileNavHeading', {
+            }).from('.mobileNavHeading', {
                 x: '-50px',
                 duration: 0.6,
                 opacity: '0',
                 ease: 'power2.out',
                 stagger: 0.3,
             });
-            
+
             tl.play();
         } else {
-            tl.to('.mobileMenu', {
+            tl.to(mobileMenuRef.current, {
                 y: '-100%',
                 duration: 0.6,
                 ease: 'power2.in',
-                onComplete: () => gsap.set('.mobileMenu', { display: 'none' }), // Hide menu after animation
+                onComplete: () => {
+                    gsap.set(mobileMenuRef.current, { visibility: 'hidden' });
+                    document.body.style.position = '';  // Re-enable scroll
+                    document.body.style.top = '';
+                    window.scrollTo(0, scrollPosition.current);  // Restore scroll position
+                },
             });
             tl.play();
         }
@@ -45,34 +79,30 @@ const Navbar = () => {
 
     return (
         <NavbarParent>
-            <NavComponent className='ubuntu-regular'>
-                <div className="left">
-                    <img src="./assets/image/logo.jpg" alt="" className="logo" />
+            <NavComponent className=''>
+                <div className="left animate">
+                    <Link to={`/`}><img src="./assets/image/logo.jpg" alt="" className="logo" /></Link>
                 </div>
-                <div className="middle">
+                <div className="middle animate">
                     <input className='searchArea' type="text" placeholder='Search your hunger' />
-                    <div className='searchIcon'><FontAwesomeIcon icon={faMagnifyingGlass} /></div>
+                    <div className='searchIcon animate'><FontAwesomeIcon icon={faMagnifyingGlass} /></div>
                 </div>
                 <div className="right d-flex flex-row">
-                    <p className="item nav-item dropdown my-0 py-0 px-2">
-                        <p className="nav-link dropdown-toggle py-0 px-2 my-0" href="/" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Menu
-                        </p>
-                        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a className="dropdown-item py-2" href="/">Non Vegetarian</a>
-                            <a className="dropdown-item py-2" href="/">Vegetarian</a>
-                        </div>
-                    </p>
-                    <p className='item my-0'>Blog</p>
+                    <Link className='link animate' to={`/Menu`}>
+                        <p className="item my-0 mx-3">Menu</p>
+                    </Link>
+                    <Link className='link animate' to={`/Blog`}>
+                        <p className="item my-0 mx-3">Blog</p>
+                    </Link>
                 </div>
                 <img className='hamburger' src="./assets/image/hamburger.png" alt="" onClick={toggleMobileMenu} />
             </NavComponent>
 
-            <MobileMenu className={isMobileMenuVisible ? 'mobileMenu' : 'mobileMenu hidden'}>
-                <h1 className='mobileNavHeading'>Menu</h1>
-                <h1 className='mobileNavHeading'>Blog</h1>
-                <h1 className='mobileNavHeading'>Contact Us</h1>
-                <h1 className='mobileNavHeading'>Home Delivery</h1>
+            <MobileMenu ref={mobileMenuRef} className="mobileMenu">
+                <Link to={'/Menu'}><h1 className='mobileNavHeading'>Menu</h1></Link>
+                <Link to={'/Blog'}><h1 className='mobileNavHeading'>Blog</h1></Link>
+                <Link to={'/Contact'}><h1 className='mobileNavHeading'>Contact Us</h1></Link>
+                <Link to={'/Delivery'}><h1 className='mobileNavHeading'>Home Delivery</h1></Link>
             </MobileMenu>
         </NavbarParent>
     );
@@ -84,35 +114,32 @@ const NavbarParent = styled.div`
 `;
 
 const MobileMenu = styled.div`
-    display: none;
+    visibility: hidden;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     height: 100vh;
     background: orange;
-    position: absolute;
+    position: fixed;  // Change from absolute to fixed
     top: 0;
     right: 0;
     width: 100%;
     z-index: 2;
-    visibility: visible; // Ensure visibility for animation
 
     .mobileNavHeading{
         opacity: 1;
-    }
-
-    &.hidden {
-        display: none;
+        text-decoration: none;
     }
 
     h1 {
         color: black;
-        padding: 1rem;
-        font-size: 2.5rem;
+    padding: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
     }
 
     @media (max-width: 768px){
-        display: flex; // Ensure it's flex on mobile
+        display: flex;
     }
 `;
 
@@ -127,6 +154,14 @@ const NavComponent = styled.div`
     padding-right: 1.5rem;
     position: fixed;
     z-index: 3;
+
+    .animate{
+        position: relative;
+    }
+
+    .link{
+        color: black;
+    }
 
     .logo{
         width: 60px;
@@ -145,7 +180,7 @@ const NavComponent = styled.div`
     }
 
     .searchIcon{
-        position: absolute;;
+        position: absolute;
         margin-right: 1rem;
     }
 
@@ -173,10 +208,32 @@ const NavComponent = styled.div`
 
     .item{
         font-size: 1.3rem;
+        text-decoration: none;
+        transition: ease all 0.3s;
+        cursor: pointer;
+    }
+
+    .item:hover{
+        color: white;
+        transform: translateY(-5px);
+    }
+
+    .link:hover{
+        text-decoration: none;
     }
 
     @media (max-width: 768px){
         height: 10vh;
+        background-color: orange;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
         .middle{
             display: none !important;
         }
@@ -188,6 +245,9 @@ const NavComponent = styled.div`
         .hamburger{
             display: block;
             cursor: pointer;
+            width: 35px;
+        }
+        .logo{
             width: 50px;
         }
     }

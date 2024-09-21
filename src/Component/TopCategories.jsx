@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import TopCategory from './dataArrays/TopCategory';
+import { Link } from 'react-router-dom';
 
 const TopCategories = () => {
     return (
         <CategoryComponent className='pb-5 container-fluid'>
-            <h1 className='my-5 d-flex justify-content-center topHeading'>Top Categories to Order</h1>
+            <h1 className='d-flex justify-content-center topHeading'>Top Categories to Order</h1>
             <div className="row px-5">
                 {
                     TopCategory.map((element, index) => {
@@ -18,7 +19,9 @@ const TopCategories = () => {
                     })
                 }
             </div>
-            <button className="btn MenuButton">Menu</button>
+            <Link to={`/Menu`}>
+                <button className="btn MenuButton">Menu</button>
+            </Link>
         </CategoryComponent>
     );
 };
@@ -33,7 +36,8 @@ const CategoryComponent = styled.div`
 
     h1 {
         font-weight: 700;
-        margin: 0;
+        margin-top: 5rem;
+        margin-bottom: 5rem;
     }
 
     .CategoryImage{
@@ -68,10 +72,18 @@ const CategoryComponent = styled.div`
             font-size: 3vmax;
         }
 
+        h1{
+            margin-top: 1rem !important;
+            margin-bottom: 1rem !important;
+        }
+
         .CategoryImage{
         width: 80%;
         padding-right: 0px;
     }
+        .btn{
+            border-radius: 5px;
+        }
 
         .CategoryText{
         font-size: 16px;
