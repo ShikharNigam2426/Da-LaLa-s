@@ -3,14 +3,33 @@ import styled from 'styled-components';
 import gsap from 'gsap';
 import '../fonts.css';
 import MenuArray from '../dataArrays/Menu';
+import { useSelector, useDispatch } from 'react-redux';
+import { addItem } from '../../redux/cart/cartSlice';
 
 const Menu = () => {
   const [currentMenu, setCurrentMenu] = useState('1');
+  const dispatch = useDispatch();
 
   // Function to handle category click
   const handleCategoryClick = (id) => {
     setCurrentMenu(id);
   };
+
+  const AddToCart = async(image, name, price, desc) => {
+    const product = {
+      image: image,
+      name: name,
+      price: price,
+      desc: desc,
+    }
+
+    // console.log(product);
+    console.log('in jsx');
+    
+    await dispatch(addItem({
+      product,
+    }));
+  }
 
   // Filter menu items based on currentMenu category
   const filteredMenu = MenuArray.filter(item => item.category == currentMenu);
@@ -29,9 +48,10 @@ const Menu = () => {
   }, [currentMenu]); // Re-run animation when currentMenu changes
 
   return (
-    <MenuComponent className='ubuntu-bold'>
-      <Categories>
+    <MenuComponent className='ubuntu-bold row'>
+      <Categories className='col-2 d-flex flex-column'>
         <CategoryButton
+          className='my-2'
           id='1'
           isActive={currentMenu === '1'}
           onClick={() => handleCategoryClick('1')}
@@ -39,6 +59,7 @@ const Menu = () => {
           NonVeg
         </CategoryButton>
         <CategoryButton
+          className='my-2'
           id='2'
           isActive={currentMenu === '2'}
           onClick={() => handleCategoryClick('2')}
@@ -46,6 +67,39 @@ const Menu = () => {
           Veg
         </CategoryButton>
         <CategoryButton
+          className='my-2'
+          id='3'
+          isActive={currentMenu === '3'}
+          onClick={() => handleCategoryClick('3')}
+        >
+          Combo
+        </CategoryButton>
+        <CategoryButton
+          className='my-2'
+          id='3'
+          isActive={currentMenu === '3'}
+          onClick={() => handleCategoryClick('3')}
+        >
+          Combo
+        </CategoryButton>
+        <CategoryButton
+          className='my-2'
+          id='3'
+          isActive={currentMenu === '3'}
+          onClick={() => handleCategoryClick('3')}
+        >
+          Combo
+        </CategoryButton>
+        <CategoryButton
+          className='my-2'
+          id='3'
+          isActive={currentMenu === '3'}
+          onClick={() => handleCategoryClick('3')}
+        >
+          Combo
+        </CategoryButton>
+        <CategoryButton
+          className='my-2'
           id='3'
           isActive={currentMenu === '3'}
           onClick={() => handleCategoryClick('3')}
@@ -53,8 +107,7 @@ const Menu = () => {
           Combo
         </CategoryButton>
       </Categories>
-
-      <MenuBoxes>
+      <MenuBoxes className='col-10'>
         {filteredMenu.length > 0 ? (
           filteredMenu.map((item, index) => (
             <MenuBox key={index} className="menu-card">
@@ -62,16 +115,13 @@ const Menu = () => {
                 <CardImage src={item.image} alt={item.name} />
                 <CardContent>
                   <PriceRating>
-                    <Rating>{item.rating} ({item.numberOfPeopleRated})</Rating>
-                    <Price>${item.price}</Price>
+                    <Rating>{item.name}</Rating>
+                    <Price>₹{item.price}</Price>
                   </PriceRating>
-                  <CardTitle>{item.name}</CardTitle>
-                  <Description>
-                    <li className='desc'>4 Chicken Legs</li> {/* Customize as per actual description */}
-                    <li className='desc'>Chili Sauce</li>
-                    <li className='desc'>Soft Drinks</li>
+                  <Description className='px-3'>
+                    <p>{item.desc}</p>
                   </Description>
-                  <OrderButton>Order Now</OrderButton>
+                  <OrderButton onClick={() => {AddToCart(item.image, item.name, item.price, item.desc)}}>Add to Cart</OrderButton>
                 </CardContent>
               </CardContainer>
             </MenuBox>
@@ -104,14 +154,21 @@ const MenuBoxes = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
-  width: 95%;
-  margin-top: 2rem;
+  width: 100%;
+  overflow-y: auto;  /* Allow the right column to scroll */
+  height: 100vh;  /* Ensure the right side takes up full viewport height */
+  padding: 10px;
+  background-color: #fff;
+  
+  @media(max-width: 768px){
+    height: auto;
+  }
 `;
 
 const CategoryButton = styled.div`
   cursor: pointer;
   color: black;
-  width: 26%;
+  width: 80%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -130,30 +187,31 @@ const CategoryButton = styled.div`
 `;
 
 const Categories = styled.div`
-  height: 12vh;
-  width: 60%;
+  height: 100vh;  /* Full viewport height */
+  position: sticky;  /* Sticks the category menu to the viewport */
+  top: 0;  /* Ensure it sticks at the top */
+  width: 100%;
   display: flex;
-  border: 1px solid black;
-  border-radius: 5px;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  padding: 1rem;
+  background-color: #f5f5f5;  /* Add a background color to differentiate */
+  
   @media (max-width: 768px) {
-    width: 95%;
-    height: 8vh;
+    position: static;  /* Disable sticky behavior on smaller screens */
+    height: auto;
+    margin-top: 0;
   }
 `;
 
 const MenuComponent = styled.div`
   position: relative;
   top: 12vh;
-  padding-top: 5vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
   justify-content: center;
 
   @media(max-width: 768px){
-    padding-top: 1vh;
   }
 `;
 
@@ -218,7 +276,7 @@ const CardTitle = styled.h5`
   }
 `;
 
-const Description = styled.ul`
+const Description = styled.div`
   list-style: none;
   padding: 0;
   margin: 10px 0;
@@ -231,16 +289,18 @@ const Description = styled.ul`
 `;
 
 const OrderButton = styled.button`
-  background-color: orange;
-  color: white;
-  border: none;
+  background-color: transparent;
+  color: orange;
+  border: 1px solid orange;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  transition: background-color 0.3s ease;
+  font-weight: bold;
+  transition: background-color 0.5s ease;
   &:hover {
     background-color: #d58b00;
+    color: white;
   }
 
   @media(max-width: 768px){

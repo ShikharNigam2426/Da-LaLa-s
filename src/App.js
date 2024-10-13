@@ -26,7 +26,7 @@ const App = () => {
         </Route>
 
         <Route path='/Menu' element={
-          <div className='ubuntu-bold'>
+          <div className='ubuntu-bold' style={{'overflow-x': 'hidden'}}>
             <Navbar />
             <Menu />
           </div>

@@ -6,12 +6,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 const Navbar = (props) => {
     const [isMobileMenuVisible, setMobileMenuVisible] = useState(false);
+    const [cartItem, setCartItem] = useState(0);
     const mobileMenuRef = useRef(null);
     const scrollPosition = useRef(0);  // To save scroll position
     const location = useLocation(); // Get current location (route)
+    const basket = useSelector((state) => state.cart.basket)
 
     const toggleMobileMenu = () => {
         setMobileMenuVisible(!isMobileMenuVisible);
@@ -21,8 +24,6 @@ const Navbar = (props) => {
         // Example: Close the mobile menu when the route changes
         setMobileMenuVisible(false);
         window.scrollTo(0, 0);
-        
-        console.log("Route changed to:", location.pathname);
     }, [location]);
 
     useEffect(() => {
@@ -36,6 +37,10 @@ const Navbar = (props) => {
             stagger: 0.3,
         });
     }, []);
+
+    useEffect(() => {
+        setCartItem(basket.length)
+    }, [basket]);
 
     useEffect(() => {
 
@@ -81,13 +86,16 @@ const Navbar = (props) => {
         <NavbarParent>
             <NavComponent className=''>
                 <div className="left animate">
-                    <Link to={`/`}><img src="./assets/image/logo.jpg" alt="" className="logo" /></Link>
+                    <Link to={`/`}><img src="./assets/image/logo1.png" alt="" className="logo" /></Link>
                 </div>
                 <div className="middle animate">
                     <input className='searchArea' type="text" placeholder='Search your hunger' />
                     <div className='searchIcon animate'><FontAwesomeIcon icon={faMagnifyingGlass} /></div>
                 </div>
                 <div className="right d-flex flex-row">
+                    <Link className='link animate' to={`/Cart`}>
+                        <p className="item my-0 mx-3">Cart({cartItem})</p>
+                    </Link>
                     <Link className='link animate' to={`/Menu`}>
                         <p className="item my-0 mx-3">Menu</p>
                     </Link>
