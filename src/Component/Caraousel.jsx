@@ -13,10 +13,10 @@ const Caraousel = () => {
                 </ol>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img class="d-block w-100" src="./assets/image/Designer.png" alt="First slide" />
+                        <img class="d-block w-100" src="https://images.pexels.com/photos/20446397/pexels-photo-20446397/free-photo-of-top-view-of-a-meal.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="First slide" />
                         <div class="carousel-caption d-md-block">
-                            <h3 className='topText'>Welcome to</h3>
-                            <h1 className='my-0 py-0 bottomText'>Da <span style={{'color': 'orange'}}>LaLa's</span></h1>
+                            <h3 className='topText'><i>Flavors That Make You Go 'Mmmm'</i></h3>
+                            <h1 className='my-0 py-0 bottomText'>Welcome to Da <span style={{'color': 'orange'}}>LaLa's</span></h1>
                         </div>
                     </div>
                     <div class="carousel-item">

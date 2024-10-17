@@ -3,127 +3,70 @@ import styled from 'styled-components';
 import gsap from 'gsap';
 import '../fonts.css';
 import MenuArray from '../dataArrays/Menu';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addItem } from '../../redux/cart/cartSlice';
 
 const Menu = () => {
-  const [currentMenu, setCurrentMenu] = useState('1');
+  const [currentMenu, setCurrentMenu] = useState('Starters'); // Default category
   const dispatch = useDispatch();
 
-  // Function to handle category click
-  const handleCategoryClick = (id) => {
-    setCurrentMenu(id);
+  // Extract unique categories from the MenuArray
+  const categories = [...new Set(MenuArray.map((item) => item.category))];
+
+  // Handle category selection
+  const handleCategoryClick = (category) => {
+    setCurrentMenu(category);
   };
 
-  const AddToCart = async(image, name, price, desc) => {
+  // Handle adding to cart
+  const AddToCart = async (item, portion, price) => {
     const product = {
-      image: image,
-      name: name,
-      price: price,
-      desc: desc,
+      image: item.image,
+      name: item.name,
+      portion,
+      price,
+      description: item.description,
+      quantity: portion,
+    };
+    if (price === 'Unavailable') {
+      alert('This dish is not available');
     }
+    else {
+      await dispatch(addItem({ product }));
+    }
+  };
 
-    // console.log(product);
-    console.log('in jsx');
-    
-    await dispatch(addItem({
-      product,
-    }));
-  }
+  // Filter menu items based on the selected category
+  const filteredMenu = MenuArray.filter((item) => item.category === currentMenu);
 
-  // Filter menu items based on currentMenu category
-  const filteredMenu = MenuArray.filter(item => item.category == currentMenu);
-
-  // GSAP animation on cards
+  // GSAP animation for menu cards
   useEffect(() => {
-    gsap.fromTo('.menu-card', {
-      translateY: '-50px',  // Start position
-      opacity: 0,
-  }, {
-      translateY: '0px',   // End position
-      opacity: 1,
-      duration: 1,
-      stagger: 0.2,
-  });
-  }, [currentMenu]); // Re-run animation when currentMenu changes
+    gsap.fromTo(
+      '.menu-card',
+      { translateY: '-50px', opacity: 0 },
+      { translateY: '0px', opacity: 1, duration: 1, stagger: 0.2 }
+    );
+  }, [currentMenu]);
 
   return (
-    <MenuComponent className='ubuntu-bold row'>
-      <Categories className='col-2 d-flex flex-column'>
-        <CategoryButton
-          className='my-2'
-          id='1'
-          isActive={currentMenu === '1'}
-          onClick={() => handleCategoryClick('1')}
-        >
-          NonVeg
-        </CategoryButton>
-        <CategoryButton
-          className='my-2'
-          id='2'
-          isActive={currentMenu === '2'}
-          onClick={() => handleCategoryClick('2')}
-        >
-          Veg
-        </CategoryButton>
-        <CategoryButton
-          className='my-2'
-          id='3'
-          isActive={currentMenu === '3'}
-          onClick={() => handleCategoryClick('3')}
-        >
-          Combo
-        </CategoryButton>
-        <CategoryButton
-          className='my-2'
-          id='3'
-          isActive={currentMenu === '3'}
-          onClick={() => handleCategoryClick('3')}
-        >
-          Combo
-        </CategoryButton>
-        <CategoryButton
-          className='my-2'
-          id='3'
-          isActive={currentMenu === '3'}
-          onClick={() => handleCategoryClick('3')}
-        >
-          Combo
-        </CategoryButton>
-        <CategoryButton
-          className='my-2'
-          id='3'
-          isActive={currentMenu === '3'}
-          onClick={() => handleCategoryClick('3')}
-        >
-          Combo
-        </CategoryButton>
-        <CategoryButton
-          className='my-2'
-          id='3'
-          isActive={currentMenu === '3'}
-          onClick={() => handleCategoryClick('3')}
-        >
-          Combo
-        </CategoryButton>
+    <MenuComponent className="ubuntu-bold row">
+      <Categories className="col-2 d-flex flex-column">
+        {categories.map((category, index) => (
+          <CategoryButton
+            key={index}
+            isactive={currentMenu === category}
+            onClick={() => handleCategoryClick(category)}
+          >
+            {category}
+          </CategoryButton>
+        ))}
       </Categories>
-      <MenuBoxes className='col-10'>
+
+      <MenuBoxes className="col-10">
         {filteredMenu.length > 0 ? (
           filteredMenu.map((item, index) => (
-            <MenuBox key={index} className="menu-card">
-              <CardContainer>
-                <CardImage src={item.image} alt={item.name} />
-                <CardContent>
-                  <PriceRating>
-                    <Rating>{item.name}</Rating>
-                    <Price>₹{item.price}</Price>
-                  </PriceRating>
-                  <Description className='px-3'>
-                    <p>{item.desc}</p>
-                  </Description>
-                  <OrderButton onClick={() => {AddToCart(item.image, item.name, item.price, item.desc)}}>Add to Cart</OrderButton>
-                </CardContent>
-              </CardContainer>
+            <MenuBox key={index} className="menu-card col-lg-3 col-md-4 col-6 mt-3">
+              <DishCard item={item} onAddToCart={AddToCart} />
             </MenuBox>
           ))
         ) : (
@@ -134,90 +77,113 @@ const Menu = () => {
   );
 };
 
+// Component for individual dish cards
+const DishCard = ({ item, onAddToCart }) => {
+  const [portion, setPortion] = useState('Half'); // Default to 'Half'
+  const [price, setPrice] = useState(item.half); // Default to 'Half' price
+
+  // Handle portion size change
+  const handlePortionChange = (e) => {
+    const selectedPortion = e.target.value;
+    setPortion(selectedPortion);
+
+    switch (selectedPortion) {
+      case 'Half':
+        setPrice(item.half);
+        break;
+      case 'Full':
+        setPrice(item.full);
+        break;
+      case 'Family':
+        if (item.family) {
+          setPrice(item.family);
+        }
+        else {
+          setPrice('Unavailable')
+        }
+        break;
+      default:
+        setPrice(item.halfPrice);
+    }
+  };
+
+  return (
+    <CardContainer>
+      <CardImage src={item.image} alt={item.name} />
+      <CardContent>
+        <PriceRating>
+          <Rating>{item.name}</Rating>
+          <Price>{price}</Price>
+        </PriceRating>
+        {
+          (item.category === "Breads" || item.category === "Raitas") ? (<></>) : (
+            <PortionSelect value={portion} onChange={handlePortionChange}>
+              <option value="Half">Half</option>
+              <option value="Full">Full</option>
+              <option value="Family">Family</option>
+            </PortionSelect>
+          )
+        }
+        <Description className="px-3">
+          <p>{item.description}</p>
+        </Description>
+        <OrderButton onClick={() => onAddToCart(item, portion, price)}>Add to Cart</OrderButton>
+      </CardContent>
+    </CardContainer>
+  );
+};
+
 // Styled Components
 const MenuBox = styled.div`
   width: 30%;
   max-width: 350px;
-  height: auto;
-  margin: 1rem;
   display: flex;
   justify-content: center;
 
-  @media(max-width: 768px){
+  @media (max-width: 768px) {
     width: 45%;
-    margin: 0.5rem;
   }
 `;
 
 const MenuBoxes = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
   align-items: flex-start;
   width: 100%;
-  overflow-y: auto;  /* Allow the right column to scroll */
-  height: 100vh;  /* Ensure the right side takes up full viewport height */
+  overflow-y: auto;
+  height: 100vh;
   padding: 10px;
   background-color: #fff;
-  
-  @media(max-width: 768px){
-    height: auto;
-  }
 `;
 
 const CategoryButton = styled.div`
   cursor: pointer;
-  color: black;
-  width: 80%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 15px;
-  background-color: ${({ isActive }) => (isActive ? 'orange' : 'transparent')};
-  color: ${({ isActive }) => (isActive ? 'black' : 'black')};
+  background-color: ${({ isactive }) => (isactive ? 'orange' : 'transparent')};
   border-radius: 5px;
-  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+  text-align: center;
   &:hover {
     background-color: orange;
-  }
-
-  @media (max-width: 768px) {
-    padding: 8px;
   }
 `;
 
 const Categories = styled.div`
-  height: 100vh;  /* Full viewport height */
-  position: sticky;  /* Sticks the category menu to the viewport */
-  top: 0;  /* Ensure it sticks at the top */
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  height: 100vh;
+  position: sticky;
+  top: 0;
   padding: 1rem;
-  background-color: #f5f5f5;  /* Add a background color to differentiate */
-  
-  @media (max-width: 768px) {
-    position: static;  /* Disable sticky behavior on smaller screens */
-    height: auto;
-    margin-top: 0;
-  }
+  background-color: #f5f5f5;
 `;
 
 const MenuComponent = styled.div`
   position: relative;
   top: 12vh;
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-
-  @media(max-width: 768px){
-  }
 `;
 
 const CardContainer = styled.div`
   width: 100%;
-  height: 100%;
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -249,62 +215,36 @@ const PriceRating = styled.div`
 const Rating = styled.div`
   font-size: 16px;
   color: #555;
-
-  @media (max-width: 768px){
-    font-size: 11px;
-  }
 `;
 
 const Price = styled.div`
   font-size: 18px;
   font-weight: bold;
   color: #333;
-
-  @media(max-width: 768px){
-    font-size: 12px;
-  }
 `;
 
-const CardTitle = styled.h5`
-  font-size: 20px;
+const PortionSelect = styled.select`
   margin: 10px 0;
-  color: #333;
-  font-weight: bold;
-
-  @media(max-width: 768px){
-    font-size: 14px;
-  }
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
 `;
 
 const Description = styled.div`
-  list-style: none;
-  padding: 0;
-  margin: 10px 0;
   color: #777;
   font-size: 14px;
-
-  @media(max-width: 768px){
-    font-size: 12px;
-  }
 `;
 
 const OrderButton = styled.button`
-  background-color: transparent;
-  color: orange;
-  border: 1px solid orange;
+  background-color: orange;
+  color: white;
+  border: none;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: background-color 0.5s ease;
   &:hover {
     background-color: #d58b00;
-    color: white;
-  }
-
-  @media(max-width: 768px){
-    font-size: 13px;
   }
 `;
 

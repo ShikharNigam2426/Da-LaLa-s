@@ -108,7 +108,7 @@ const Navbar = (props) => {
 
             <MobileMenu ref={mobileMenuRef} className="mobileMenu">
                 <Link to={'/Menu'}><h1 className='mobileNavHeading'>Menu</h1></Link>
-                <Link to={'/Blog'}><h1 className='mobileNavHeading'>Blog</h1></Link>
+                <Link to={'/Cart'}><h1 className='mobileNavHeading'>Cart</h1></Link>
                 <Link to={'/Contact'}><h1 className='mobileNavHeading'>Contact Us</h1></Link>
                 <Link to={'/Delivery'}><h1 className='mobileNavHeading'>Home Delivery</h1></Link>
             </MobileMenu>
@@ -172,7 +172,9 @@ const NavComponent = styled.div`
     }
 
     .logo{
-        width: 60px;
+        width: 74px;
+    border: 4px solid #ffff0026;
+    border-radius: 50%;
     }
 
     .hamburger{
