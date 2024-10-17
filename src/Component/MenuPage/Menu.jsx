@@ -113,7 +113,7 @@ const DishCard = ({ item, onAddToCart }) => {
       <CardContent>
         <PriceRating>
           <Rating>{item.name}</Rating>
-          <Price>{price}</Price>
+          <Price>₹{price}</Price>
         </PriceRating>
         {
           (item.category === "Breads" || item.category === "Raitas") ? (<></>) : (

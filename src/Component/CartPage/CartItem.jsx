@@ -30,6 +30,22 @@ const CartItem = () => {
             </Header>
 
             <CartContent>
+                <div className="row w-100 my-2">
+                    <div className="col-3 d-flex align-items-center">
+                        {/* Name */}
+                    </div>
+                    <div className="col-9 row d-flex justify-content-between">
+                        <InfoBlock className=' col-4 align-items-center'>
+                            <h4>Name</h4>
+                        </InfoBlock>
+                        <InfoBlock className=' col-4 align-items-center'>
+                            <h4>Category</h4>
+                        </InfoBlock>
+                        <InfoBlock className=' col-4 align-items-center'>
+                            <h4>Price</h4>
+                        </InfoBlock>
+                    </div>
+                </div>
                 {items.map((item) => (
                     <CartRow key={item.id}>
                         <div className="row w-100 my-2">
@@ -37,23 +53,23 @@ const CartItem = () => {
                                 <img src={item.image} alt="" className="itemImage" />
                             </div>
                             <div className="col-9 d-flex justify-content-between">
-                                <InfoBlock>
-                                    <p className="label">Name</p>
-                                    <p className="value">{item.name}</p>
-                                </InfoBlock>
-                                <InfoBlock>
-                                    <p className="label">Quantity</p>
-                                    <p className="value">{item.quantity}</p>
-                                </InfoBlock>
-                                <InfoBlock className='flex-row'>
-                                    <div className="d-flex flex-column pr-lg-5 pr-2 justify-content-center">
-                                        <p className="label">Total</p>
-                                        <p className="value">₹{item.price}</p>
-                                    </div>
-                                    <div className='d-flex align-items-center'>
-                                        <ClearIcon onClick={() => RemoveItem(item)} />
-                                    </div>
-                                </InfoBlock>
+                                <div className="row w-100">
+                                    <InfoBlock className='col-4'>
+                                        <p className="value">{item.name}</p>
+                                    </InfoBlock>
+                                    <InfoBlock className='col-4'>
+                                        <p className="value">{item.quantity}</p>
+                                    </InfoBlock >
+                                    <InfoBlock className='col-4 flex-row'>
+                                        <div className="d-flex flex-column justify-content-center">
+                                            <p className="value mr-5">₹{item.price}</p>
+                                        </div>
+                                        <div className='d-flex align-items-center'>
+                                            <ClearIcon className='icon' onClick={() => RemoveItem(item)} />
+                                        </div>
+                                    </InfoBlock>
+
+                                </div>
                             </div>
                         </div>
                     </CartRow>
@@ -61,8 +77,8 @@ const CartItem = () => {
             </CartContent>
 
             <OrderSummary>
-                <p>Delivery Charges: ₹{delivery}</p>
-                <p>Order total: <strong>₹{totalAmount}</strong></p>
+                <p>Delivery Charges: <span className='text-dark'>₹{delivery}</span></p>
+                <p>Order total: <strong className='text-dark'>₹{totalAmount}</strong></p>
             </OrderSummary>
 
             <Actions>
@@ -80,6 +96,16 @@ const CartWrapper = styled.div`
     color: black;
     width: 100%;
     padding: 20px;
+    
+    p{
+        margin: 0;
+        padding: 0;
+        color: #484848a3;
+    }
+
+    .icon{
+        color: black;
+    }
 `;
 
 const Header = styled.div`
