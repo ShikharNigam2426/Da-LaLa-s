@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 
 const CartItem = () => {
     const items = useSelector((state) => state.cart.basket);
-    const [delivery, setDelivery] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
     const dispatch = useDispatch();
 
@@ -21,6 +20,24 @@ const CartItem = () => {
         setTotalAmount(newTotal);
     }, [items]);
 
+
+    // const handleOrderNow = () => {
+    //     const phoneNumber = "+919935894482";
+    //     const baseUrl = `https://wa.me/${phoneNumber}?text=`;
+
+    //     let message = "Order Details:\n\n";
+    //     items.forEach((item, index) => {
+    //         message += `${index + 1}. ${item.name} - ₹${item.price} x ${item.quantity}\n`;
+    //     });
+    //     message += `\nSubtotal: ₹${totalAmount}`;
+    //     message += `\nDelivery Charges: ₹${delivery}`;
+    //     message += `\nTotal: ₹${totalAmount + delivery}`;
+
+    //     const encodedMessage = encodeURIComponent(message);
+
+    //     window.open(`${baseUrl}${encodedMessage}`, '_blank');
+    // };
+
     return (
         <CartWrapper>
             <Header>
@@ -31,44 +48,43 @@ const CartItem = () => {
 
             <CartContent>
                 <div className="row w-100 my-2">
-                    <div className="col-3 d-flex align-items-center">
+                    <div className="col-3 none d-flex align-items-center">
                         {/* Name */}
                     </div>
-                    <div className="col-9 row d-flex justify-content-between">
-                        <InfoBlock className=' col-4 align-items-center'>
-                            <h4>Name</h4>
+                    <div className="col-lg-9 col-md-9 col-sm-12 row d-flex justify-content-between" style={{ 'marginLeft': '9px' }}>
+                        <InfoBlock className=' col-5 align-items-center'>
+                            <h4 style={{ 'margin': '0' }}>Name</h4>
                         </InfoBlock>
                         <InfoBlock className=' col-4 align-items-center'>
-                            <h4>Category</h4>
+                            <h4 style={{ 'margin': '0' }}>Category</h4>
                         </InfoBlock>
-                        <InfoBlock className=' col-4 align-items-center'>
-                            <h4>Price</h4>
+                        <InfoBlock className=' col-3 align-items-center'>
+                            <h4 style={{ 'margin': '0' }}>Price</h4>
                         </InfoBlock>
                     </div>
                 </div>
                 {items.map((item) => (
                     <CartRow key={item.id}>
-                        <div className="row w-100 my-2">
-                            <div className="col-3 d-flex align-items-center">
+                        <div className="row w-100 my-2 itemRow">
+                            <div className="col-lg-3 imageDiv col-md-3 col-sm-3 col-12 mb-2 d-flex justify-content-center align-items-center">
                                 <img src={item.image} alt="" className="itemImage" />
                             </div>
-                            <div className="col-9 d-flex justify-content-between">
+                            <div className="col-lg-9  col-md-9 col-sm-9 col-12 d-flex justify-content-between">
                                 <div className="row w-100">
-                                    <InfoBlock className='col-4'>
-                                        <p className="value">{item.name}</p>
+                                    <InfoBlock className='col-6'>
+                                        <p className="value  d-flex align-items-center justify-content-center">{item.name}</p>
                                     </InfoBlock>
-                                    <InfoBlock className='col-4'>
-                                        <p className="value">{item.quantity}</p>
+                                    <InfoBlock className='col-3'>
+                                        <p className="value  d-flex align-items-center justify-content-center">{item.quantity}</p>
                                     </InfoBlock >
-                                    <InfoBlock className='col-4 flex-row'>
+                                    <InfoBlock className='col-3 flex-row'>
                                         <div className="d-flex flex-column justify-content-center">
-                                            <p className="value mr-5">₹{item.price}</p>
+                                            <p className="value mr-lg-5 mr-md-3 mr-1">₹{item.price}</p>
                                         </div>
                                         <div className='d-flex align-items-center'>
                                             <ClearIcon className='icon' onClick={() => RemoveItem(item)} />
                                         </div>
                                     </InfoBlock>
-
                                 </div>
                             </div>
                         </div>
@@ -77,7 +93,7 @@ const CartItem = () => {
             </CartContent>
 
             <OrderSummary>
-                <p>Delivery Charges: <span className='text-dark'>₹{delivery}</span></p>
+                <p>Delivery Charges: <span className='text-dark'>As per applicable*</span></p>
                 <p>Order total: <strong className='text-dark'>₹{totalAmount}</strong></p>
             </OrderSummary>
 
@@ -85,7 +101,9 @@ const CartItem = () => {
                 <Link to='/Menu'>
                     <button className="btn orangeButton">Continue Shopping</button>
                 </Link>
-                <button className="btn orderButton">Order Now</button>
+                <Link to={'/Cart/Checkout'}>
+                    <button className="btn orderButton" >Proceed to order</button>
+                </Link>
             </Actions>
         </CartWrapper>
     );
@@ -141,8 +159,35 @@ const CartContent = styled.div`
     margin-bottom: 20px;
 
     .itemImage {
-        width: 100%;
-        border-radius: 8px;
+        width: 75%;
+    height: 100%;
+    object-fit: inherit;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    }
+
+    .imageDiv{
+            height: 22vh;
+        }
+
+    @media (max-width: 768px) {
+        .imageDiv{
+            height: 15vh;
+        }
+        .itemImage{
+            object-fit: fill;
+        width: 45% !important;
+        height: 100% !important;
+        }
+        h4{
+            font-size: 15px;
+        }
+    }
+    @media (max-width: 425px) {
+        h4{
+            font-size: 12px;
+        }
     }
 `;
 
@@ -179,6 +224,15 @@ const InfoBlock = styled.div`
 
         .value {
             font-size: 12px;
+        }
+    }
+    @media (max-width: 425px) {
+        .label {
+            font-size: 0.9rem;
+        }
+
+        .value {
+            font-size: 10px;
         }
     }
 `;

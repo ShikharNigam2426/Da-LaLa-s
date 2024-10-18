@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const Navbar = (props) => {
     const [isMobileMenuVisible, setMobileMenuVisible] = useState(false);
@@ -109,8 +109,8 @@ const Navbar = (props) => {
             <MobileMenu ref={mobileMenuRef} className="mobileMenu">
                 <Link to={'/Menu'}><h1 className='mobileNavHeading'>Menu</h1></Link>
                 <Link to={'/Cart'}><h1 className='mobileNavHeading'>Cart</h1></Link>
+                <Link to={'/Delivery'}><h1 className='mobileNavHeading'>Blog</h1></Link>
                 <Link to={'/Contact'}><h1 className='mobileNavHeading'>Contact Us</h1></Link>
-                <Link to={'/Delivery'}><h1 className='mobileNavHeading'>Home Delivery</h1></Link>
             </MobileMenu>
         </NavbarParent>
     );
@@ -132,7 +132,7 @@ const MobileMenu = styled.div`
     top: 0;
     right: 0;
     width: 100%;
-    z-index: 2;
+    z-index: 10;
 
     .mobileNavHeading{
         opacity: 1;

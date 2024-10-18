@@ -12,8 +12,10 @@ const Footer = () => {
       <div className="row footerRow d-flex justify-content-center align-items-center">
         <div className="col-8 d-flex flex-column footerSection">
           <img src="./assets/image/logo.jpg" alt="" style={{ 'width': '60px' }} />
-          <p>10/634 Indira Nagar, Lucknow.</p>
-          <p>+91 8577047704</p>
+          <a href="https://maps.app.goo.gl/55RTdofbnXSnXJT3A"><p>10/634 Indira Nagar, Lucknow.</p></a>
+          <a href="https://wa.me/918577047704" target='__blank'>
+            <p>+91 8577047704</p>
+          </a>
           <p>dalalaslko@gmail.com</p>
 
           <Link className='link animate my-2' to={`/Contact`}>

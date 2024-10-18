@@ -9,14 +9,13 @@ const Caraousel = () => {
                 <ol class="carousel-indicators">
                     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
                     <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
                 </ol>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <img class="d-block w-100" src="https://images.pexels.com/photos/20446397/pexels-photo-20446397/free-photo-of-top-view-of-a-meal.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="First slide" />
                         <div class="carousel-caption d-md-block">
-                            <h3 className='topText'><i>Flavors That Make You Go 'Mmmm'</i></h3>
-                            <h1 className='my-0 py-0 bottomText'>Welcome to Da <span style={{'color': 'orange'}}>LaLa's</span></h1>
+                            <h3 className='topText'><i>Flavors That Make You Go 'Mmmm...'</i></h3>
+                            <h1 className='my-0 py-0 bottomText'>Da <span style={{'color': 'orange'}}>LaLa's</span></h1>
                         </div>
                     </div>
                     <div class="carousel-item">
@@ -24,13 +23,6 @@ const Caraousel = () => {
                         <div class="carousel-caption d-md-block">
                             <h2 className='bottomText'>Da <span style={{'color': 'orange',}}>LaLa's</span></h2>
                             <h5 className='my-0 py-0 topText'>Where Every Meal is a Masterpiece.</h5>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img class="d-block w-100" src="./assets/image/3" alt="Third slide" />
-                        <div class="carousel-caption d-md-block">
-                            <h2>Welcome to Da LaLa's</h2>
-                            <h5 className='my-0 py-0'>Best Restaurant of Lucknow</h5>
                         </div>
                     </div>
                 </div>
