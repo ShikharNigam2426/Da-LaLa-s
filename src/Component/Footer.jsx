@@ -24,7 +24,7 @@ const Footer = () => {
         </div>
         <div className="col-4 d-flex flex-column footerSection">
           <h4 className='mb-2'>Socials</h4>
-          <a className='d-flex my-1  align-items-center social' href="https://www.instagram.com/dalalaslko?igsh=eXc4MGhhaTNhc3gx" target='blank'> <InstagramIcon /> Instagram </a>
+          <a className='d-flex my-1  align-items-center social' href="https://www.instagram.com/da_lalaslko?igsh=MTBrZWRmcmRuODF6ZA==" target='blank'> <InstagramIcon /> Instagram </a>
           <a className='d-flex my-1  align-items-center social' href="https://wa.me/918577047704" target='blank'> <WhatsAppIcon /> WhatsApp</a>
           <div>
           </div>
