@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import './fonts.css';
 import gsap from 'gsap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -88,10 +86,10 @@ const Navbar = (props) => {
                 <div className="left animate">
                     <Link to={`/`}><img src="./assets/image/logo1.png" alt="" className="logo" /></Link>
                 </div>
-                <div className="middle animate">
-                    <input className='searchArea' type="text" placeholder='Search your hunger' />
-                    <div className='searchIcon animate'><FontAwesomeIcon icon={faMagnifyingGlass} /></div>
-                </div>
+                {/* <div className="middle animate"> */}
+                    {/* <input className='searchArea' type="text" placeholder='Search your hunger' />
+                    <div className='searchIcon animate'><FontAwesomeIcon icon={faMagnifyingGlass} /></div> */}
+                {/* </div> */}
                 <div className="right d-flex flex-row">
                     <Link className='link animate' to={`/Cart`}>
                         <p className="item my-0 mx-3">Cart({cartItem})</p>

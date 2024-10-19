@@ -11,9 +11,10 @@ const Checkout = () => {
 
     const items = useSelector((state) => state.cart.basket);
     const [delivery, setDelivery] = useState(0);
-    
+
+    // setDelivery(0);
     // Calculate total amount
-    const totalAmount = items.reduce((acc, item) => acc + item.price, 0); // Updated to consider quantity
+    const totalAmount = items.reduce((acc, item) => acc + item.price, 0);
     const navigate = useNavigate(); // React Router hook for navigation
 
     // Handle order confirmation and WhatsApp message preparation
@@ -48,10 +49,16 @@ const Checkout = () => {
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    // Prevent default form submission
+    // Validate form fields and handle form submission
     const handleSubmit = (e) => {
         e.preventDefault();
-        alert('Order placed successfully!'); // Confirmation message
+        const { fullName, address } = formData;
+
+        // Check if any required field is empty
+        if (!fullName.trim() || !address.trim()) {
+            alert('Please fill in all the required fields.');
+            return; // Stop form submission if validation fails
+        }
         handleOrderNow(); // Proceed to order now after confirmation
     };
 

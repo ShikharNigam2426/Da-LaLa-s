@@ -61,6 +61,12 @@ const CategoryComponent = styled.div`
         transition: all ease 0.3s;
     }
 
+    .CategoryImage{
+            border-radius: 15%;
+        width: 80%;
+        padding-right: 0px;
+    }
+
     .MenuButton:hover{
         background-color: white !important;
         border: 1.3px solid orange;
@@ -78,6 +84,7 @@ const CategoryComponent = styled.div`
         }
 
         .CategoryImage{
+            border-radius: 15%;
         width: 80%;
         padding-right: 0px;
     }
@@ -90,6 +97,10 @@ const CategoryComponent = styled.div`
         font-weight: bolder;
         margin: 0px;
         padding: 0px;
+
+        @media screen {
+            font-size: 14px;   
+        }
     }
     }
 `;

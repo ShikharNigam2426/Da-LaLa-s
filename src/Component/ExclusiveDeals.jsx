@@ -5,15 +5,15 @@ import Deals from './dataArrays/ExclusiveDeals';
 const ExclusiveDeals = () => {
   return (
     <ExclusiveComponent>
-      <h1 className='my-5'>Exclusive Deal for you</h1>
+      <h1 className='my-4'>Our Services</h1>
 
       <div className="row exclusiveImages">
         <div className="col-lg-8 col-md-8 col-sm-12 col-12 columns">
-          <img src={Deals[0].image} alt="" />
+          <img style={{'borderRadius': '35px'}} src={Deals[0].image} alt="" />
         </div>
         <div className="col-4 columns notInMobile">
           <div className="row rightDeals"><img src={Deals[1].image} alt="" /></div>
-          <div className="row rightDeals"><img src={Deals[0].image} alt="" /></div>
+          <div className="row rightDeals"><img src={Deals[2].image} alt="" /></div>
         </div>
       </div>
     </ExclusiveComponent>
@@ -41,8 +41,12 @@ const ExclusiveComponent = styled.div`
       font-weight: 700;
     }
     .exclusiveImages{
-      height: 60vh;
-      width: 80%;
+      height: 70vh;
+      width: 70%;
+
+      @media screen {
+        width: 80% ;
+      }
     }
 
     .rightDeals{

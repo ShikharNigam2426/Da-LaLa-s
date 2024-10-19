@@ -8,22 +8,18 @@ import { addItem } from '../../redux/cart/cartSlice';
 
 const Menu = () => {
   const [currentMenu, setCurrentMenu] = useState('Starters');
-  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false); // Toggle for mobile
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const dispatch = useDispatch();
 
   const categories = [...new Set(MenuArray.map((item) => item.category))];
 
   const handleCategoryClick = (category) => {
     setCurrentMenu(category);
-    if (window.innerWidth <= 768) setIsCategoriesOpen(false); // Collapse on selection in mobile
+    if (window.innerWidth <= 768) setIsCategoriesOpen(false);
   };
 
   const toggleCategories = () => {
-    setIsCategoriesOpen((prev) => {
-      const newState = !prev;
-      console.log("Toggle Categories Clicked, New State:", newState);
-      return newState;
-    });
+    setIsCategoriesOpen((prev) => !prev);
   };
 
   const AddToCart = async (item, portion, price) => {
@@ -54,9 +50,9 @@ const Menu = () => {
 
   return (
     <MenuComponent className="ubuntu-bold row">
-      <CategoriesContainer className='col-lg-2 col-md-2 col-sm-12'>
+      <CategoriesContainer className='categoryheight col-lg-2 col-md-2 col-sm-12'>
         <CategoryToggle onClick={toggleCategories}>☰ Categories</CategoryToggle>
-        <Categories className='categoryColumn' isOpen={isCategoriesOpen}>
+        <Categories className='categoryColumn' isOpen={isCategoriesOpen} >
           {categories.map((category, index) => (
             <CategoryButton
               key={index}
@@ -70,43 +66,54 @@ const Menu = () => {
       </CategoriesContainer>
 
       <MenuBoxes className="col-lg-10 col-md-10 col-12 menuItems">
-        {filteredMenu.length > 0 ? (
+        {/* Only render the menuRow if categories are closed */}
+        {!isCategoriesOpen && (
           <div className="row menuRow w-100">
-            {filteredMenu.map((item, index) => (
-              <MenuBox key={index} className="menu-card col-lg-3 col-md-4 col-sm-4 col-6">
-                <DishCard item={item} onAddToCart={AddToCart} />
-              </MenuBox>
-            ))}
+            {filteredMenu.length > 0 ? (
+              filteredMenu.map((item, index) => (
+                <MenuBox key={index} className="menu-card col-lg-3 col-md-4 col-sm-4 col-6">
+                  <DishCard currentMenu={currentMenu} item={item} onAddToCart={AddToCart} />
+                </MenuBox>
+              ))
+            ) : (
+              <p>No items to display in this category.</p>
+            )}
           </div>
-        ) : (
-          <p>No items to display in this category.</p>
         )}
       </MenuBoxes>
     </MenuComponent>
   );
 };
 
-const DishCard = ({ item, onAddToCart }) => {
+const DishCard = ({ currentMenu, item, onAddToCart }) => {
   const [portion, setPortion] = useState('Half');
-  const [price, setPrice] = useState(item.half);
+  const [price, setPrice] = useState(0);
+
+  useEffect(() => {
+    if (currentMenu === "Rolls" || currentMenu === "Breads" || currentMenu === "Raitas" || currentMenu === "Salad" || currentMenu === "Rice Bowl Combo" || currentMenu === "Bread & Curry Combo" || currentMenu === "Non Veg Deluxe Thali" || currentMenu === "Kebab Combo" || currentMenu === "Veg Deluxe Thali" || currentMenu === "Non Veg Deluxe Thali") {
+      setPrice(item.price);
+    } else {
+      switch (portion) {
+        case 'Quarter':
+          setPrice(item.quarter !== null ? item.quarter : 'Unavailable');
+          break;
+        case 'Half':
+          setPrice(item.half !== null ? item.half : 'Unavailable');
+          break;
+        case 'Full':
+          setPrice(item.full !== null ? item.full : 'Unavailable');
+          break;
+        case 'Family':
+          setPrice(item.family !== null ? item.family : 'Unavailable');
+          break;
+        default:
+          setPrice(item.price !== null ? item.price : item.price);
+      }
+    }
+  }, [currentMenu, portion, item]);
 
   const handlePortionChange = (e) => {
-    const selectedPortion = e.target.value;
-    setPortion(selectedPortion);
-
-    switch (selectedPortion) {
-      case 'Half':
-        setPrice(item.half);
-        break;
-      case 'Full':
-        setPrice(item.full);
-        break;
-      case 'Family':
-        setPrice(item.family || 'Unavailable');
-        break;
-      default:
-        setPrice(item.half);
-    }
+    setPortion(e.target.value);
   };
 
   return (
@@ -114,18 +121,25 @@ const DishCard = ({ item, onAddToCart }) => {
       <CardImage src={item.image} alt={item.name} />
       <CardContent>
         <PriceRating>
-          <Rating>{item.name}</Rating>
+          <Rating className='d-flex align-items-center pr-lg-3 pr-md-3'>{item.name}</Rating>
           <Price>₹{price}</Price>
         </PriceRating>
-        {(item.category === 'Breads' || item.category === 'Raitas') ? null : (
-          <PortionSelect value={portion} onChange={handlePortionChange}>
-            <option value="Half">Half</option>
-            <option value="Full">Full</option>
-            <option value="Family">Family</option>
-          </PortionSelect>
+        {(item.category === 'Breads' || item.category === 'Raitas' || item.category === 'Rolls') ? null : (
+          <>
+            {(item.quarter === null && item.half === null && item.full === null && item.family === null) ? (
+              null
+            ) : (
+              <PortionSelect value={portion} onChange={handlePortionChange}>
+                {item.quarter !== null && <option value="Quarter">Quarter</option>}
+                {item.half !== null && <option value="Half">Half</option>}
+                {item.full !== null && <option value="Full">Full</option>}
+                {item.family !== null && <option value="Family">Family</option>}
+              </PortionSelect>
+            )}
+          </>
         )}
         <Description>
-          <p>{item.description}</p>
+          <p className='desc'>{item.description}</p>
         </Description>
         <OrderButton onClick={() => onAddToCart(item, portion, price)}>
           Add to Cart
@@ -149,6 +163,8 @@ const MenuComponent = styled.div`
 const CategoriesContainer = styled.div`
   width: 100%;
   position: relative;
+  padding-right: 0;
+  width: 20%;
   @media (min-width: 769px) {
     width: 20%;
   }
@@ -178,29 +194,32 @@ const CategoryToggle = styled.button`
 const Categories = styled.div`
   display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
   padding: 1rem;
-  background-color: #f5f5f5;
-  height: auto; /* Changed to auto */
-  position: sticky;
-  top: 0;
-  overflow-y: auto;
+  
 
   .categoryColumn {
     position: fixed;
     top: 12vh;
+    overflow: scroll;
+    width: 15%;
   }
 
   @media (min-width: 769px) {
     display: block;
     position: fixed;
     top: 12vh;
+    overflow-y: scroll;
+    width: 15%;
+    height: 88vh;
   }
 
   @media (max-width: 768px) {
-    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')}; /* Ensure it opens on mobile */
+    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
     width: 100%;
     position: fixed;
-    top: 14vh;
-    z-index: 1; /* Ensure it’s above other elements */
+    top: 15vh;
+    z-index: 1;
+    overflow-y: scroll;
+    height: ${({ isOpen }) => (isOpen ? '80vh' : '0vh')};
   }
 `;
 
@@ -223,18 +242,14 @@ const MenuBoxes = styled.div`
   width: 100%;
   padding: 10px;
   background-color: #fff;
-  justify-content: center;  
+  justify-content: center;
 
-  .menuRow{
-    margin: 0px auto;
+  .menuRow {
+    margin: 0 auto;
   }
 
   @media (max-width: 768px) {
-    margin-top: 5vh;
-
-    .menuRow{
-      margin: 10px auto;
-    }
+    margin: 6vh auto 6vh auto;
   }
 `;
 
@@ -277,66 +292,52 @@ const Rating = styled.div`
   @media (max-width: 768px) {
     font-size: 12px;
   }
-
-  @media (max-width: 576px) {
-    font-size: 12px;
-  }
 `;
 
 const Price = styled.div`
   font-size: 20px;
   font-weight: bold;
+  color: #e67e22;
 
-  @media (max-width: 768px) {
-    font-size: 12px;
-  }
-
-  @media (max-width: 576px) {
-    font-size: 12px;
+  @media screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
 const PortionSelect = styled.select`
-    width: 100%;
-    padding: 5px;
-    margin: 10px 0;
-    @media (max-width: 768px) {
-      height: 25px;
-      font-size: 12px;
-  }
+  width: 100%;
+  padding: 2px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin: 5px 0;
+  font-size: 15px;
+  height: 29px;
 `;
 
 const Description = styled.div`
-  margin: 10px 0;
   font-size: 14px;
   color: #777;
 
   @media (max-width: 768px) {
-    font-size: 12px;
+    .desc{
+      font-size: 12px;
+    }
   }
 `;
 
 const OrderButton = styled.button`
-  background-color: orange;
+  background: #e67e22;
   color: white;
   border: none;
-  padding: 10px 15px;
-  cursor: pointer;
+  padding: 8px;
   border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
 
   &:hover {
-    background-color: darkorange;
-  }
-
-  @media (max-width: 768px){
-    background-color: orange;
-    color: white;
-    border: none;
-    padding: 6px 15px;
-    cursor: pointer;
-    width: 87%;
-    border-radius: 8px;
-    font-size: 12px;
+    background: #d95f1e;
   }
 `;
 
