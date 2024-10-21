@@ -2,17 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import './fonts.css';
 import gsap from 'gsap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { updateCategory } from '../redux/category/categorySlice';
 
 const Navbar = (props) => {
+    const items = useSelector((state) => state.cart.basket);
     const [isMobileMenuVisible, setMobileMenuVisible] = useState(false);
     const [cartItem, setCartItem] = useState(0);
     const mobileMenuRef = useRef(null);
     const scrollPosition = useRef(0);  // To save scroll position
     const location = useLocation(); // Get current location (route)
     const basket = useSelector((state) => state.cart.basket)
+    const currentMenu = useSelector((state) => state.category.category);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const toggleMobileMenu = () => {
         setMobileMenuVisible(!isMobileMenuVisible);
@@ -80,6 +86,12 @@ const Navbar = (props) => {
 
     }, [isMobileMenuVisible]);
 
+    const changeRoute = async (category) => {
+        console.log('category changed from: ' + currentMenu);
+        dispatch(updateCategory({ category }));
+        navigate(`/Menu`);
+    }
+
     return (
         <NavbarParent>
             <NavComponent className=''>
@@ -87,25 +99,30 @@ const Navbar = (props) => {
                     <Link to={`/`}><img src="./assets/image/logo1.png" alt="" className="logo" /></Link>
                 </div>
                 {/* <div className="middle animate"> */}
-                    {/* <input className='searchArea' type="text" placeholder='Search your hunger' />
+                {/* <input className='searchArea' type="text" placeholder='Search your hunger' />
                     <div className='searchIcon animate'><FontAwesomeIcon icon={faMagnifyingGlass} /></div> */}
                 {/* </div> */}
                 <div className="right d-flex flex-row">
                     <Link className='link animate' to={`/Cart`}>
                         <p className="item my-0 mx-3">Cart({cartItem})</p>
                     </Link>
-                    <Link className='link animate' to={`/Menu`}>
-                        <p className="item my-0 mx-3">Menu</p>
-                    </Link>
+                    <p className='item my-0 mx-3 link animate' onClick={() => { changeRoute("All") }}>Menu</p>
                     <Link className='link animate' to={`/Blog`}>
                         <p className="item my-0 mx-3">Blog</p>
                     </Link>
                 </div>
-                <img className='hamburger' src="./assets/image/hamburger.png" alt="" onClick={toggleMobileMenu} />
+                <div className='d-flex flex-row align-items-center justify-content-center d-lg-none d-md-none'>
+                    <Link to='/Cart' style={{ 'color': 'black', 'textDecorationLine': 'none' }}>
+                        <div className='d-flex flex-row align-items-center justify-content-center pr-2'>
+                            <ShoppingCartIcon className='' />({items.length})
+                        </div>
+                    </Link>
+                    <img className='hamburger' src="./assets/image/hamburger.png" alt="" onClick={toggleMobileMenu} />
+                </div>
             </NavComponent>
 
             <MobileMenu ref={mobileMenuRef} className="mobileMenu">
-                <Link to={'/Menu'}><h1 className='mobileNavHeading'>Menu</h1></Link>
+                <h1 className='mobileNavHeading' onClick={() => { changeRoute("All") }}>Menu</h1>
                 <Link to={'/Cart'}><h1 className='mobileNavHeading'>Cart</h1></Link>
                 <Link to={'/Delivery'}><h1 className='mobileNavHeading'>Blog</h1></Link>
                 <Link to={'/Contact'}><h1 className='mobileNavHeading'>Contact Us</h1></Link>

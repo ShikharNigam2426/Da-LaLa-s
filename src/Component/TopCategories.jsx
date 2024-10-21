@@ -1,9 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 import TopCategory from './dataArrays/TopCategory';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateCategory } from '../redux/category/categorySlice';
 
 const TopCategories = () => {
+
+    const currentMenu = useSelector((state) => state.category.category);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const changeRoute = async (category) => {
+        console.log('category changed from: ' + currentMenu);
+        dispatch(updateCategory({ category }));
+        navigate(`/Menu`);
+    }
+
     return (
         <CategoryComponent className='pb-5 container-fluid'>
             <h1 className='d-flex justify-content-center topHeading'>Top Categories to Order</h1>
@@ -11,7 +24,7 @@ const TopCategories = () => {
                 {
                     TopCategory.map((element, index) => {
                         return (
-                            <div className="col-lg-3 col-md-3 px-2 col-sm-6 col-6 d-flex flex-column align-items-center justify-content-center">
+                            <div onClick={() => { changeRoute(element.Category) }} className="col-lg-3 col-md-3 px-2 col-sm-6 col-6 d-flex flex-column align-items-center justify-content-center">
                                 <img className='CategoryImage m-3' src={element.image} alt="" />
                                 <h3 className='CategoryText'>{element.Category}</h3>
                             </div>
@@ -19,9 +32,7 @@ const TopCategories = () => {
                     })
                 }
             </div>
-            <Link to={`/Menu`}>
-                <button className="btn MenuButton">Menu</button>
-            </Link>
+            <button className="btn MenuButton" onClick={() => { changeRoute("All") }}>Menu</button>
         </CategoryComponent>
     );
 };
@@ -98,8 +109,8 @@ const CategoryComponent = styled.div`
         margin: 0px;
         padding: 0px;
 
-        @media screen {
-            font-size: 14px;   
+        @media (max-width: 420px) {
+            font-size: 11px;   
         }
     }
     }

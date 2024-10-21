@@ -3,18 +3,24 @@ import styled from 'styled-components';
 import gsap from 'gsap';
 import '../fonts.css';
 import MenuArray from '../dataArrays/Menu';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { addItem } from '../../redux/cart/cartSlice';
+import { updateCategory } from '../../redux/category/categorySlice';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 const Menu = () => {
-  const [currentMenu, setCurrentMenu] = useState('Starters');
+  // const [currentMenu, setCurrentMenu] = useState('Starters');
+  const currentMenu = useSelector((state) => state.category.category);
+  console.log(currentMenu);
+
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const dispatch = useDispatch();
 
   const categories = [...new Set(MenuArray.map((item) => item.category))];
 
   const handleCategoryClick = (category) => {
-    setCurrentMenu(category);
+    dispatch(updateCategory({ category }));
     if (window.innerWidth <= 768) setIsCategoriesOpen(false);
   };
 
@@ -38,7 +44,7 @@ const Menu = () => {
     }
   };
 
-  const filteredMenu = MenuArray.filter((item) => item.category === currentMenu);
+  const filteredMenu = (currentMenu !== "All") ? (MenuArray.filter((item) => item.category === currentMenu)) : MenuArray;
 
   useEffect(() => {
     gsap.fromTo(
@@ -48,11 +54,22 @@ const Menu = () => {
     );
   }, [currentMenu]);
 
+  useEffect(() => {
+    // Example: Close the mobile menu when the route changes
+    window.scrollTo(0, 0);
+}, [currentMenu]);
+
   return (
     <MenuComponent className="ubuntu-bold row">
       <CategoriesContainer className='categoryheight col-lg-2 col-md-2 col-sm-12'>
-        <CategoryToggle onClick={toggleCategories}>☰ Categories</CategoryToggle>
+        <CategoryToggle onClick={toggleCategories}>{(isCategoriesOpen) ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />} Categories</CategoryToggle>
         <Categories className='categoryColumn' isOpen={isCategoriesOpen} >
+          <CategoryButton
+            isactive={currentMenu === "All"}
+            onClick={() => handleCategoryClick("All")}
+          >
+            All
+          </CategoryButton>
           {categories.map((category, index) => (
             <CategoryButton
               key={index}
@@ -92,7 +109,11 @@ const DishCard = ({ currentMenu, item, onAddToCart }) => {
   useEffect(() => {
     if (currentMenu === "Rolls" || currentMenu === "Breads" || currentMenu === "Raitas" || currentMenu === "Salad" || currentMenu === "Rice Bowl Combo" || currentMenu === "Bread & Curry Combo" || currentMenu === "Non Veg Deluxe Thali" || currentMenu === "Kebab Combo" || currentMenu === "Veg Deluxe Thali" || currentMenu === "Non Veg Deluxe Thali") {
       setPrice(item.price);
-    } else {
+    }
+    else if(item.category === "Rolls" || item.category === "Breads" || item.category === "Raitas" || item.category === "Salad" || item.category === "Rice Bowl Combo" || item.category === "Bread & Curry Combo" || item.category === "Non Veg Deluxe Thali" || item.category === "Kebab Combo" || item.category === "Veg Deluxe Thali" || item.category === "Non Veg Deluxe Thali"){
+      setPrice(item.price);
+    } 
+    else {
       switch (portion) {
         case 'Quarter':
           setPrice(item.quarter !== null ? item.quarter : 'Unavailable');
@@ -168,6 +189,10 @@ const CategoriesContainer = styled.div`
   @media (min-width: 769px) {
     width: 20%;
   }
+
+  @media (max-width: 1070px) and (min-width: 768px) {
+    font-size: 11px;
+}
 `;
 
 const CategoryToggle = styled.button`
@@ -185,11 +210,15 @@ const CategoryToggle = styled.button`
   }
 
   @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: fixed;
     top: 9vh;
     z-index: 5;
   }
 `;
+
 
 const Categories = styled.div`
   display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
@@ -292,6 +321,11 @@ const Rating = styled.div`
   @media (max-width: 768px) {
     font-size: 12px;
   }
+
+  @media (max-width: 1070px) and (min-width: 768px) {
+    font-size: 15px;
+}
+
 `;
 
 const Price = styled.div`

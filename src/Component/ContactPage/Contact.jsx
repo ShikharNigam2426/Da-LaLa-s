@@ -34,7 +34,7 @@ const Contact = () => {
         <ContactComponent>
             <div className="row fullHeight">
                 <div className="col-lg-8 col-md-8 col-6 bg-white py-4 pl-4">
-                    <p className="ubuntu-medium">Send us a message</p>
+                    <p className="ubuntu-medium">Send us your feedback</p>
                     <div className="row text-secondary">
                         <div className="col-lg-5 col-md-5 col-12 d-flex flex-column py-2">
                             <label htmlFor="">Name</label>
@@ -69,11 +69,11 @@ const Contact = () => {
                             />
                         </div>
                         <div className="col-lg-5 col-md-5 col-12 d-flex flex-column py-2">
-                            <label htmlFor="">Issue/Review</label>
+                            <label htmlFor="">Feedback</label>
                             <input
                                 className='py-1 px-2'
                                 type="text"
-                                placeholder='Enter your Issue or Review'
+                                placeholder='Enter your feedback'
                                 value={favoriteDish}
                                 onChange={(e) => setFavoriteDish(e.target.value)}
                             />
@@ -81,14 +81,14 @@ const Contact = () => {
                     </div>
                     <ButtonContainer>
                         <SendMessageButton onClick={handleOrderNow}>
-                            Send Message
+                            Send Feedback
                         </SendMessageButton>
                     </ButtonContainer>
                 </div>
                 <div className="col-lg-4 col-md-4 col-6 orange py-4 pl-4">
                     <p className='ubuntu-medium'>Contact Information</p>
                     <div className='ubuntu-regular text-secondary'>
-                        <p className='mb-4'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Est explicabo quod, nisi fugiat dolor quis.</p>
+                        <p className='mb-4'>Thank you for choosing us! Your feedback is incredibly valuable to us, and we genuinely appreciate your reviews. They play a crucial role in helping us enhance our services and provide you with the best experience possible. We look forward to hearing your thoughts!</p>
                         <p className='d-flex align-items-center'><LocationOnIcon />10/634 Indira Nagar, Lucknow.</p>
                         <p className='d-flex align-items-center'><LocalPhoneIcon />+91 8577047704</p>
                         <p className='d-flex align-items-center'><MailIcon className='mr-1' />dalalaslko@gmail.com</p>
