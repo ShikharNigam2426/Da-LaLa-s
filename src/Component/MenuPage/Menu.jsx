@@ -107,10 +107,10 @@ const DishCard = ({ currentMenu, item, onAddToCart }) => {
   const [price, setPrice] = useState(0);
 
   useEffect(() => {
-    if (currentMenu === "Rolls" || currentMenu === "Breads" || currentMenu === "Raitas" || currentMenu === "Salad" || currentMenu === "Rice Bowl Combo" || currentMenu === "Bread & Curry Combo" || currentMenu === "Non Veg Deluxe Thali" || currentMenu === "Kebab Combo" || currentMenu === "Veg Deluxe Thali" || currentMenu === "Non Veg Deluxe Thali") {
+    if (currentMenu === "Rolls" || currentMenu === "Breads" || currentMenu === "Raitas" || currentMenu === "Salad" || currentMenu === "Rice Bowl Combo" || currentMenu === "Bread & Curry Combo" || currentMenu === "Non Veg Deluxe Thali" || currentMenu === "Kebab Combo" || currentMenu === "Veg Deluxe Thali" || currentMenu === "Non Veg Deluxe Thali" || currentMenu === "Chinese Combos" || currentMenu === "Soups") {
       setPrice(item.price);
     }
-    else if(item.category === "Rolls" || item.category === "Breads" || item.category === "Raitas" || item.category === "Salad" || item.category === "Rice Bowl Combo" || item.category === "Bread & Curry Combo" || item.category === "Non Veg Deluxe Thali" || item.category === "Kebab Combo" || item.category === "Veg Deluxe Thali" || item.category === "Non Veg Deluxe Thali"){
+    else if(item.category === "Rolls" || item.category === "Breads" || item.category === "Raitas" || item.category === "Salad" || item.category === "Rice Bowl Combo" || item.category === "Bread & Curry Combo" || item.category === "Non Veg Deluxe Thali" || item.category === "Kebab Combo" || item.category === "Veg Deluxe Thali" || item.category === "Non Veg Deluxe Thali" || item.name === "Chicken Lollipop (5 Pcs)"){
       setPrice(item.price);
     } 
     else {

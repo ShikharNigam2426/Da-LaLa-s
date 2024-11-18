@@ -8,10 +8,10 @@ const ExclusiveDeals = () => {
       <h1 className='my-4'>Our Services</h1>
 
       <div className="row exclusiveImages">
-        <div className="col-lg-8 col-md-8 col-sm-12 col-12 columns">
-          <img style={{'borderRadius': '35px'}} src={Deals[0].image} alt="" />
+        <div className="col-lg-8 col-md-8 col-sm-12 col-12 d-flex align-items-center columns">
+          <img className='mobileSize' src={Deals[0].image} alt="" />
         </div>
-        <div className="col-4 columns notInMobile">
+        <div className="col-lg-4 col-12 columns notInMobile">
           <div className="row rightDeals"><img src={Deals[1].image} alt="" /></div>
           <div className="row rightDeals"><img src={Deals[2].image} alt="" /></div>
         </div>
@@ -35,6 +35,7 @@ const ExclusiveComponent = styled.div`
       width: 100%;
     height: 100%;
     object-fit: fill;
+    box-shadow: 5px 5px 10px  rgba(0, 0, 0, 0.2);
     }
 
     h1{
@@ -55,7 +56,9 @@ const ExclusiveComponent = styled.div`
 
     @media (max-width: 768px) {
       h1{
-        font-size: 3vmax !important;
+        font-size: 4vmax !important;
+        color: white;
+        border-bottom: 1px solid black;
       }
 
       .exclusiveImages{
@@ -64,6 +67,13 @@ const ExclusiveComponent = styled.div`
 
       .notInMobile{
         display: none;
+      }
+
+      img{
+        height: 70%;
+        /* border: 1px solid black; */
+        border-radius: 10px;
+        box-shadow: 5px 5px 10px  rgba(0, 0, 0, 0.2);
       }
     }
 `;

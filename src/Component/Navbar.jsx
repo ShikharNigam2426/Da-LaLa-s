@@ -190,6 +190,7 @@ const NavComponent = styled.div`
         width: 74px;
     border: 4px solid #ffff0026;
     border-radius: 50%;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3), 0px 6px 20px rgba(0, 0, 0, 0.19);
     }
 
     .hamburger{

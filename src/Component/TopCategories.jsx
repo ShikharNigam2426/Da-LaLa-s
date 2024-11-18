@@ -24,8 +24,8 @@ const TopCategories = () => {
                 {
                     TopCategory.map((element, index) => {
                         return (
-                            <div onClick={() => { changeRoute(element.Category) }} className="col-lg-3 col-md-3 px-2 col-sm-6 col-6 d-flex flex-column align-items-center justify-content-center">
-                                <img className='CategoryImage m-3' src={element.image} alt="" />
+                            <div onClick={() => { changeRoute(element.Category) }} className="col-lg-3 col-md-3 px-2 col-sm-6 col-6 d-flex flex-column align-items-center justify-content-center pointer">
+                                <img className='CategoryImage m-3 box' src={element.image} alt="" />
                                 <h3 className='CategoryText'>{element.Category}</h3>
                             </div>
                         )
@@ -44,6 +44,11 @@ const CategoryComponent = styled.div`
     justify-content: center;
     margin-top: 13vh;
     align-items: center;
+
+    .box{
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3), 0px 6px 20px rgba(0, 0, 0, 0.19);
+        cursor: pointer;
+    }
 
     h1 {
         font-weight: 700;
@@ -70,6 +75,7 @@ const CategoryComponent = styled.div`
         color: white;
         border-radius: 10px;
         transition: all ease 0.3s;
+        font-weight: 500;
     }
 
     .CategoryImage{
